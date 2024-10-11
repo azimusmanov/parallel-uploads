@@ -1,6 +1,7 @@
 #!/usr/bin/python
 #https://developers.google.com/youtube/v3/guides/uploading_a_video
 #Python 2.5 or higher
+#https://developers.google.com/youtube/v3/guides/uploading_a_video
 
 #Install the Google APIs Client Library for Python (google-api-python-client)
 
