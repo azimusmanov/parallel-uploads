@@ -1,6 +1,15 @@
 #!/usr/bin/python
 #https://developers.google.com/youtube/v3/guides/uploading_a_video
+#Python 2.5 or higher
 
+#Install the Google APIs Client Library for Python (google-api-python-client)
+
+#Register your application with Google so that it can use the OAuth 
+#2.0 protocol to authorize access to user data.
+
+#To use OAuth 2.0 steps with this script, you'll need to create a 
+#client_secrets.json file that contains information from the API Console.
+#The file should be in the same directory as the script.
 import httplib
 import httplib2
 import os
