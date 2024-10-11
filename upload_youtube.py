@@ -1,9 +1,11 @@
+#TO DO: Upload Message Says channel name that it was uploaded to
+
 #!/usr/bin/python
 # https://developers.google.com/youtube/v3/guides/uploading_a_video
 # Python 2.5 or higher
 # https://developers.google.com/youtube/v3/guides/uploading_a_video
 
-#python upload_youtube.py --file="C:\Users\buchk\Documents\#Career\IMG_4786.mov" --title="AK going crazy" --description="Test Description" --category="22" --keywords="test,upload" --privacyStatus="unlisted"
+#  python upload_youtube.py --file="C:\Users\buchk\Documents\#Career\IMG_4786.mov" --title="AK going crazy" --description="Test Description" --category="22" --keywords="test,upload" --privacyStatus="unlisted"
 
 # Install the Google APIs Client Library for Python (google-api-python-client)
 
