@@ -1,9 +1,12 @@
 import subprocess
 import sys
+from upload_helper import upload_file
+
 
 def main():
     # Define your video details here
     filepath = "C:/Users/buchk/Documents/#Career/IMG_4786.mov"
+    file_name = "IMG_4786.mov"
     title = "AK going crazy"
     description = "Test Description"
     category = "22"  # Example category for 'People & Blogs'
@@ -28,6 +31,9 @@ def main():
     print(result.stdout)
     if result.stderr:
         print("Error:", result.stderr)
+
+    #temporarily uploading file to AWS instagramfileholder bucket
+    upload_file(filepath)
 
 if __name__ == "__main__":
     main()
