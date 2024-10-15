@@ -25,7 +25,7 @@ def upload_file(file_name, bucket="instagramfileholder", object_name=None):
     # Upload the file
     s3_client = boto3.client('s3')
     try:
-        response = s3_client.upload_file(file_name, bucket, object_name)
+        response = s3_client.upload_file(file_name, bucket, object_name, ExtraArgs={'ACL': 'public-read'})
     except ClientError as e:
         logging.error(e)
         return False
