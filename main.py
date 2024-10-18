@@ -1,22 +1,29 @@
 import subprocess
 import sys
-from upload_helper import upload_file
-
+from upload_aws import upload_file_to_aws
+from ig_helper import ig_create_container
+#contact me at AzimUsmanov2027@u.northwestern.edu for more info or documentation
 
 def main():
-    # Define your video details here
-    filepath = "C:/Users/buchk/Documents/#Career/IMG_4786.mov"
-    file_name = "IMG_4786.mov"
+    #defining video fields
+    #SHARED FIELDS
+    filepath = "C:/Users/buchk/Documents/#Career/IMG_4786.mp4"
+    file_name = "IMG_4786.mp4"
     title = "AK going crazy"
     description = "Test Description"
+
+    #YOUTUBE FIELDS
     category = "22"  # Example category for 'People & Blogs'
     keywords = "test,upload"
     privacy_status = "unlisted"  # Can be 'public', 'private', or 'unlisted'
 
+
+    #INSTAGRAM FIELDS
+
     #temporarily uploading file to AWS instagramfileholder bucket
-    upload_file(filepath)
-    aws_url = "https://instagramfileholder.s3.us-east-2.amazonaws.com/" + file_name
+    aws_url = upload_file_to_aws(filepath)
     print("successfully uploaded to AWS bucket")
+    print("AWS link: " + aws_url)
 
     # Build the command to run upload_youtube.py with the required arguments
     command = [
@@ -30,12 +37,16 @@ def main():
     ]
 
     # Call the upload_youtube script with subprocess
-    result = subprocess.run(command, capture_output=True, text=True)
+    # result = subprocess.run(command, capture_output=True, text=True)
 
-    # Print the output and error if any
-    print(result.stdout)
-    if result.stderr:
-        print("Error:", result.stderr)
+    # # Print the output and error if any
+    # print("YouTube: ")
+    # print(result.stdout)
+    # if result.stderr:
+    #     print("YOUTUBE Error:", result.stderr)
+
+    print("Instagram Process: ")
+    ig_create_container("y", aws_url, description)
 
 if __name__ == "__main__":
     main()
