@@ -27,9 +27,9 @@ def ig_create_container(ig__id, url, caption):
         print(response_json)  # Debugging information
 
         # Extract container ID from the response
-        container_id = response_json.get("image_id")  # Correct field is 'video_id'
+        container_id = response_json.get("id")  # Correct field is 'video_id'
         print(f"Container ID: {container_id}")
-        return ig_upload_container(container_id)
+        return ig_upload_container(container_id, ig_id)
     else:
         print(f"Error: {response.status_code}")
         print(response.text)
@@ -37,9 +37,9 @@ def ig_create_container(ig__id, url, caption):
 
 
 
-def ig_upload_container(container_number):
-    response = requests.post(f"https://graph.facebook.com/v21.0/17841469637578345/media_publish?creation_id={container_number}")
-    #response = requests.post(f"https://graph.facebook.com/v21.0/17841469637578345/media_publish?creation_id=896791421977760")
+def ig_upload_container(container_number, ig_id):
+    print(container_number)
+    response = requests.post(f"https://graph.facebook.com/v21.0/{ig_id}/media_publish?creation_id={container_number}")
 
     # Check if the status code is 400 (bad request)
     if response.status_code == 400:
