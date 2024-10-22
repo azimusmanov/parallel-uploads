@@ -20,7 +20,7 @@ def get_name_from_path(filename):
 def main():
     #defining video fields
     #SHARED FIELDS
-    filepath = "C:/Users/buchk/Documents/#Career/IMG_4786.mp4"
+    filepath = "C:/Users/buchk/Documents/#Career/IMG_3347.mp4"
     file_name = get_name_from_path(filepath)
     title = "AK going crazy"
     description = "Test Description"
