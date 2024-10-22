@@ -1,28 +1,25 @@
 import requests
 from dotenv import load_dotenv
-from accesstoken import gen_page_access_token, get_page_id
+from accesstoken import gen_page_access_token, get_page_id, get_ig_id
 import os
 import time
 
-def ig_create_container(ig_business_account_user_id, url, caption):
-    ig_business_account_user_id = get_page_id()
-    "Creates a media object container"
+def ig_create_container(ig__id, url, caption):
+    ig_id = get_ig_id()
 
-    # access token from the accesstoken.py . Note:user_access token is temporary 
-    # Note: ADD THIS TO DOTENV before adding to git
-    #access_token = "EAAOZBCU1nD8kBOZCZBOXERJJdlfDJCA0ZC9bWjtZA2MW8znQtwHXIck9sbY4dlxMAvnPbhMuSksn1OTp4TDk5AaxWlbefOChd1C36oBEyZBmwKQetEbetl7cvekt85pBgwVZBtoiNj7OZCNGKUZB8LpnYufoooqSpheN0JehAXzEhsDSWGMzqgoC0zxrluoH1TscRwnTZCsFUKAEz3ZCNM8T2roqddUq82BEodR"
+    # access token from the accesstoken.py
     access_token = gen_page_access_token()
 
     # API endpoint
-    endpoint = f"https://graph.facebook.com/v21.0/{ig_business_account_user_id}/media?video_url={url}&caption=#{caption}"
-
+    # endpoint = f"https://graph.facebook.com/v21.0/{ig_business_account_user_id}/media?video_url={url}&caption=#{caption}"
+    endpoint = f"https://graph.facebook.com/v21.0/{ig_id}/media?image_url={url}&caption=#{caption}"
     # Payload for the request
     payload = {
-        "upload_phase": "start",
         "access_token": access_token
     }
     # Make the POST request
-    response = requests.post(endpoint)
+    response = requests.post(endpoint, payload)
+    print("after response request")
     # Check if the request was successful
     if response.status_code == 200:
         print("Container created successfully!")
@@ -32,7 +29,7 @@ def ig_create_container(ig_business_account_user_id, url, caption):
         # Extract container ID from the response
         container_id = response_json.get("video_id")  # Correct field is 'video_id'
         print(f"Container ID: {container_id}")
-        return 3#ig_upload_container(container_id)
+        return ig_upload_container(container_id)
     else:
         print(f"Error: {response.status_code}")
         print(response.text)
