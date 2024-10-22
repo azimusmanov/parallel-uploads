@@ -12,7 +12,7 @@ def ig_create_container(ig__id, url, caption):
 
     # API endpoint
     # endpoint = f"https://graph.facebook.com/v21.0/{ig_business_account_user_id}/media?video_url={url}&caption=#{caption}"
-    endpoint = f"https://graph.facebook.com/v21.0/{ig_id}/media?image_url={url}&caption=#{caption}"
+    endpoint = f"https://graph.facebook.com/v21.0/{ig_id}/media?media_type=REELS&video_url={url}&caption={caption}&share_to_feed=TRUE"
     # Payload for the request
     payload = {
         "access_token": access_token
@@ -27,7 +27,7 @@ def ig_create_container(ig__id, url, caption):
         print(response_json)  # Debugging information
 
         # Extract container ID from the response
-        container_id = response_json.get("video_id")  # Correct field is 'video_id'
+        container_id = response_json.get("image_id")  # Correct field is 'video_id'
         print(f"Container ID: {container_id}")
         return ig_upload_container(container_id)
     else:
