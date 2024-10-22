@@ -29,7 +29,7 @@ def ig_create_container(ig__id, url, caption):
         # Extract container ID from the response
         container_id = response_json.get("id")  # Correct field is 'video_id'
         print(f"Container ID: {container_id}")
-        return ig_upload_container(container_id, ig_id, access_token, url)
+        return ig_upload_container(container_id, ig_id, access_token, url, caption)
     else:
         print(f"Error: {response.status_code}")
         print(response.text)
@@ -37,16 +37,19 @@ def ig_create_container(ig__id, url, caption):
 
 
 
-def ig_upload_container(container_number, ig_id, access_token, file_url):
+def ig_upload_container(container_number, ig_id, access_token, file_url, caption):
     print(container_number)
-    endpoint = f"https://rupload.facebook.com/ig-api-upload/v21.0/{container_number}"
-    # Headers for the request
-    headers = {
-        f"Authorization: OAuth {access_token}",
-        f"file_url: {file_url}"
-    }
-    response = requests.post(endpoint, headers)
+    # endpoint = f"https://rupload.facebook.com/ig-api-upload/v21.0/{container_number}"
+    # # Headers for the request
+    # headers = {
+    #     f"Authorization: OAuth {access_token}",
+    #     f"file_url: {file_url}"
+    # }
+    # response = requests.post(endpoint, headers)
+    endpoint = f"https://graph.facebook.com/v21.0/{ig_id}/media_publish?creation_id={container_number}&access_token={access_token}"
 
+    print("before response")
+    response = requests.post(endpoint)
     # Check if the status code is 400 (bad request)
     if response.status_code == 400:
         print("Error: Bad request (status code 400)")
