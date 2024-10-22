@@ -4,11 +4,24 @@ from upload_aws import upload_file_to_aws
 from ig_helper import ig_create_container
 #contact me at AzimUsmanov2027@u.northwestern.edu for more info or documentation
 
+def get_name_from_path(filename):
+    i = len(filename)
+    if filename[i-4:i:1] != ".mp4":
+        return "ERROR"
+    i = i - 1
+    while i != 0:
+        if filename[i] == "/":
+            return filename[i+1:len(filename):1]
+        else:
+            i = i - 1
+    return "ERROR"
+
+
 def main():
     #defining video fields
     #SHARED FIELDS
     filepath = "C:/Users/buchk/Documents/#Career/IMG_4786.mp4"
-    file_name = "IMG_4786.mp4"
+    file_name = get_name_from_path(filepath)
     title = "AK going crazy"
     description = "Test Description"
 
