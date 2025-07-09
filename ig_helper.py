@@ -5,6 +5,7 @@ import os
 import time
 
 def ig_create_container(ig__id, url, caption):
+    # ig_id is currently not set
     ig_id = get_ig_id()
 
     # access token from the accesstoken.py
