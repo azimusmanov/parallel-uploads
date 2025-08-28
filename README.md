@@ -1,4 +1,7 @@
 # 🎶 Parallel Uploads 🎶
+
+Project currently on hiatus 
+
 ## 🚧WIP🚧
 ### Very Unfinished
 Hi! My name is Azim Usmanov, and this summer, my friends and I developed a passion for creating and distributing music. 🎧
