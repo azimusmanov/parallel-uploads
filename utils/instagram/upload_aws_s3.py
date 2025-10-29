@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()  # Loads the .env file into the environment
 
-def upload_file_to_aws(file_name, bucket="instagramfileholder", object_name=None):
+def upload_file_to_aws_s3(file_name, bucket="parallel-uploads-videos", object_name=None):
     """Upload a file to an S3 bucket and return the public URL
 
     :param file_name: File to upload
@@ -19,14 +19,23 @@ def upload_file_to_aws(file_name, bucket="instagramfileholder", object_name=None
     if object_name is None:
         object_name = os.path.basename(file_name)
 
+    # Path to where files go. Default to uploads folder for now
+    key = "uploads/" + object_name
+
+    # Extra args for s3 upload file
+    extra = {"ContentType": "video/mp4"}
     # Upload the file
     s3_client = boto3.client('s3')
     try:
-        response = s3_client.upload_file(file_name, bucket, object_name, ExtraArgs={'ACL': 'public-read'})
+        response = s3_client.upload_file(file_name, bucket, key, ExtraArgs=extra)
     except ClientError as e:
+        print("Error uploading file to S3")
         logging.error(e)
         return None
 
     # Construct the URL for the uploaded file
-    url = f"https://{bucket}.s3.amazonaws.com/{object_name}"
-    return url
+    return f"https://{bucket}.s3.amazonaws.com/{object_name}"
+
+if __name__ == '__main__':
+    url = upload_file_to_aws("C:/Users/buchk/parallel-uploads/test_files/test_file_1.mp4")
+    print(url)

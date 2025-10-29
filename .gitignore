@@ -1,6 +1,13 @@
 # secrets
 utils/youtube/client_secrets.json
 
+# irrelevant files
+images/
+
+# private files :)
+hidden_stuff
+
+# OK all of this stuff was autocreated by PyCharm like a year ago so idt most of this is relevant, ill probably do some clean up soon
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
