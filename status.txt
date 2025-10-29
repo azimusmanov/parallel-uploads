@@ -1,0 +1,1 @@
+Old youtube uplaod script is still working. ToDo: make the fields changeable. client_secrets.json is for youtube
