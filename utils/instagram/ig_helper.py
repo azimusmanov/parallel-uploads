@@ -1,6 +1,6 @@
 import requests
 from dotenv import load_dotenv
-from accesstoken import gen_page_access_token, get_page_id, get_ig_id
+from utils.instagram.accesstoken import gen_page_access_token, get_page_id, get_ig_id
 import os
 import time
 
