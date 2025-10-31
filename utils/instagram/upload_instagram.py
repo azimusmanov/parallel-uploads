@@ -43,7 +43,7 @@ def ig_create_container(ig_id, access_token, url, caption):
         # Error uploading (stuck on IN_PROGRESS)
         if not success:
             print("Error Uploading Container")
-            return False
+            return None
 
         return (container_id)
     else:
