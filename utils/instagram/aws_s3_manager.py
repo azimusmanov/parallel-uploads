@@ -79,7 +79,7 @@ def delete_file_from_aws_s3(object_name, bucket="parallel-uploads-videos") -> bo
         logging.error(e)
         return False
 
-
+# Testing functionality by uploading and deleting a simple bucket
 if __name__ == '__main__':
     print("Uploading file...")
     url, obj = upload_file_to_aws_s3("C:/Users/buchk/parallel-uploads/test_files/test_file_1.mp4")
