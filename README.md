@@ -1,6 +1,6 @@
 # Parallel Uploads
 
-**Project Status:** On Hiatus  
+**Project Status:** Early Development 
 
 ## Overview
 Parallel Uploads is a personal project by **Azim Usmanov**, created to streamline the process of distributing short-form content across multiple platforms such as **TikTok**, **YouTube Shorts**, and **Instagram**. The goal is to enable creators to upload a single video and automatically publish it to all selected platforms, eliminating repetitive manual uploads.
