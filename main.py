@@ -1,7 +1,7 @@
 import subprocess
 import sys
-from upload_aws import upload_file_to_aws
-from ig_helper import ig_create_container
+from utils.instagram.aws_s3_manager import upload_file_to_aws_s3
+from utils.instagram.upload_instagram import ig_create_container
 #contact me at AzimUsmanov2027@u.northwestern.edu for more info or documentation
 
 def get_name_from_path(filename):
@@ -20,8 +20,7 @@ def get_name_from_path(filename):
 def main():
     #defining video fields
     #SHARED FIELDS
-    filepath = "C:/Users/buchk/Documents/#Career/IMG_3347.mp4"
-    file_name = get_name_from_path(filepath)
+    filepath = "C:/Users/buchk/parallel-uploads/test_files/test_file_1.mp4"
     title = "AK going crazy"
     description = "Test Description"
 
@@ -34,13 +33,13 @@ def main():
     #INSTAGRAM FIELDS
 
     #temporarily uploading file to AWS instagramfileholder bucket
-    aws_url = upload_file_to_aws(filepath)
+    aws_url, _ = upload_file_to_aws_s3(filepath)
     print("successfully uploaded to AWS bucket")
     print("AWS link: " + aws_url)
 
     # Build the command to run upload_youtube.py with the required arguments
     command = [
-        sys.executable, "upload_youtube.py",  # Use sys.executable to ensure the current Python interpreter is used
+        sys.executable, "utils/youtube/upload_youtube.py",  # Use sys.executable to ensure the current Python interpreter is used
         "--file", filepath,
         "--title", title,
         "--description", description,
@@ -49,17 +48,25 @@ def main():
         "--privacyStatus", privacy_status
     ]
 
-    # Call the upload_youtube script with subprocess
-    # result = subprocess.run(command, capture_output=True, text=True)
+    # Call the upload_youtube script with subprocess. Currently commented out so I could test with Instagram
+    print("YouTube: ")
+    result = subprocess.run(command, capture_output=True, text=True)
 
-    # # Print the output and error if any
-    # print("YouTube: ")
-    # print(result.stdout)
-    # if result.stderr:
-    #     print("YOUTUBE Error:", result.stderr)
+    # Print the output and error if any
+    print("YouTube: ")
+    print(result.stdout)
+    if result.stderr:
+        print("YOUTUBE Error:", result.stderr)
 
-    print("Instagram Process: ")
-    ig_create_container("y", aws_url, description)
+    youtube_url = None
+    for line in result.stdout.splitlines():
+        if line.startswith("YOUTUBE_URL:"):
+            youtube_url = line.split("YOUTUBE_URL:")[1]
+            print("YouTube URL:", youtube_url)
+            break
+
+    # print("Instagram Process: ")
+    # ig_create_container("y", "x" , aws_url, description)
 
 if __name__ == "__main__":
     main()

@@ -1,6 +1,9 @@
 import requests
 from dotenv import load_dotenv
-from aws_s3_manager import delete_file_from_aws_s3, upload_file_to_aws_s3
+try:
+    from .aws_s3_manager import delete_file_from_aws_s3, upload_file_to_aws_s3
+except ImportError:
+    from aws_s3_manager import delete_file_from_aws_s3, upload_file_to_aws_s3
 import os
 import time
 
@@ -10,8 +13,8 @@ def ig_create_container(ig_id, access_token, url, caption):
     # Todo: clean up ts, get env stuff from .env,
     # Make a call o s3 upload function. this should make the new url
     # Getting environment variables
-    # ig_id = os.getenv("INSTAGRAM_ACCOUNT_ID")
-    # access_token = os.getenv("FB_GRAPH_TOKEN_LONG")
+    ig_id = os.getenv("INSTAGRAM_ACCOUNT_ID")
+    access_token = os.getenv("FB_GRAPH_TOKEN_LONG")
 
     # API endpoint
 
