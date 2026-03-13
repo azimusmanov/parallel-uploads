@@ -1,24 +1,11 @@
-import subprocess
-import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from utils.instagram.aws_s3_manager import upload_file_to_aws_s3
 from utils.instagram.upload_instagram import ig_create_container
+from utils.youtube.upload_youtube import upload_youtube
 #contact me at AzimUsmanov2027@u.northwestern.edu for more info or documentation
-
-def get_name_from_path(filename):
-    i = len(filename)
-    if filename[i-4:i:1] != ".mp4":
-        return "ERROR"
-    i = i - 1
-    while i != 0:
-        if filename[i] == "/":
-            return filename[i+1:len(filename):1]
-        else:
-            i = i - 1
-    return "ERROR"
 
 
 def main():
-    #defining video fields
     #SHARED FIELDS
     filepath = "C:/Users/buchk/parallel-uploads/test_files/test_file_1.mp4"
     title = "AK going crazy"
@@ -29,44 +16,29 @@ def main():
     keywords = "test,upload"
     privacy_status = "unlisted"  # Can be 'public', 'private', or 'unlisted'
 
-
-    #INSTAGRAM FIELDS
-
-    #temporarily uploading file to AWS instagramfileholder bucket
+    # Upload file to AWS so Instagram can access it via URL
     aws_url, _ = upload_file_to_aws_s3(filepath)
-    print("successfully uploaded to AWS bucket")
-    print("AWS link: " + aws_url)
+    print(f"Successfully uploaded to AWS bucket: {aws_url}")
 
-    # Build the command to run upload_youtube.py with the required arguments
-    command = [
-        sys.executable, "utils/youtube/upload_youtube.py",  # Use sys.executable to ensure the current Python interpreter is used
-        "--file", filepath,
-        "--title", title,
-        "--description", description,
-        "--category", category,
-        "--keywords", keywords,
-        "--privacyStatus", privacy_status
-    ]
+    # Upload to YouTube and Instagram concurrently
+    with ThreadPoolExecutor() as executor:
+        yt_future = executor.submit(upload_youtube, filepath, title, description, category, keywords, privacy_status)
+        ig_future = executor.submit(ig_create_container, None, None, aws_url, description)
 
-    # Call the upload_youtube script with subprocess. Currently commented out so I could test with Instagram
-    print("YouTube: ")
-    result = subprocess.run(command, capture_output=True, text=True)
+        for future in as_completed([yt_future, ig_future]):
+            if future == yt_future:
+                try:
+                    youtube_url = future.result()
+                    print(f"YouTube URL: {youtube_url}")
+                except Exception as e:
+                    print(f"YouTube upload failed: {e}")
+            else:
+                try:
+                    ig_result = future.result()
+                    print(f"Instagram container: {ig_result}")
+                except Exception as e:
+                    print(f"Instagram upload failed: {e}")
 
-    # Print the output and error if any
-    print("YouTube: ")
-    print(result.stdout)
-    if result.stderr:
-        print("YOUTUBE Error:", result.stderr)
-
-    youtube_url = None
-    for line in result.stdout.splitlines():
-        if line.startswith("YOUTUBE_URL:"):
-            youtube_url = line.split("YOUTUBE_URL:")[1]
-            print("YouTube URL:", youtube_url)
-            break
-
-    # print("Instagram Process: ")
-    # ig_create_container("y", "x" , aws_url, description)
 
 if __name__ == "__main__":
     main()
