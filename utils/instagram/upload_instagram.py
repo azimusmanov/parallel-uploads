@@ -29,46 +29,56 @@ def ig_create_container(ig_id, access_token, url, caption):
     }
 
     # Make the POST request
-    response = requests.post(endpoint, payload)
-    
-    # Check if the request was successful
-    if response.status_code == 200:
-        print("Container created successfully!")
-        response_json = response.json()
-        print(response_json)  # Debugging information
-
-        # Extract container ID from the response
-        container_id = response_json.get("id")  # Correct field is 'video_id'
-        
-        # Allow container to process
-        success = wait_until_complete(container_id, access_token)
-
-        # Error uploading (stuck on IN_PROGRESS)
-        if not success:
-            print("Error Uploading Container")
-            return None
-
-        return (container_id)
-    else:
-        print(f"Error: {response.status_code}")
-        print(response.text)
+    try:
+        response = requests.post(endpoint, payload)
+        response.raise_for_status()
+    except Exception as e:
+        print(f"[ig_create_container] Request failed: {e}")
         return None
+
+    print(f"[ig_create_container] Container created successfully! Response: {response.json()}")
+
+    # Extract container ID from the response
+    container_id = response.json().get("id")
+
+    # Allow container to process
+    success = wait_until_complete(container_id, access_token)
+
+    # Error uploading (stuck on IN_PROGRESS)
+    if not success:
+        print(f"[ig_create_container] Error: container {container_id} failed to process")
+        return None
+
+    return container_id
 
 def ig_upload_container(container_number, ig_id, access_token):
     endpoint = f"https://graph.facebook.com/v21.0/{ig_id}/media_publish?creation_id={container_number}&access_token={access_token}"
 
-    print("before response")
-    response = requests.post(endpoint)
-    if response.status_code == 200:
-        print("Post created successfully!")
-        response_json = response.json()
-        print(response_json)  # Debugging information
-    # Check if the status code is 400 (bad request)
-    if response.status_code == 400:
-        print("Error: Bad request (status code 400)")
-        print(response.text)  # Print the detailed error message from the response
-    print(response)
-    return response
+    try:
+        response = requests.post(endpoint)
+        response.raise_for_status()
+    except Exception as e:
+        print(f"[ig_upload_container] Publish request failed: {e}")
+        return None
+
+    print(f"[ig_upload_container] Post published successfully! Response: {response.json()}")
+
+    media_id = response.json()["id"]
+
+    # fetch permalink
+    try:
+        permalink_resp = requests.get(
+            f"https://graph.facebook.com/v21.0/{media_id}",
+            params={"fields": "permalink", "access_token": access_token}
+        )
+        permalink_resp.raise_for_status()
+    except Exception as e:
+        print(f"[ig_upload_container] Permalink request failed: {e}")
+        return None
+
+    print(f"[ig_upload_container] Permalink response: {permalink_resp.json()}")
+
+    return permalink_resp.json()["permalink"]
 
 def wait_until_complete(container_id, access_token, interval=5, max_attempts=40):
     """
@@ -87,7 +97,7 @@ def wait_until_complete(container_id, access_token, interval=5, max_attempts=40)
         response = requests.get(status_endpoint)
 
         if response.status_code != 200:
-            print(f"Error checking status: {response.status_code} — {response.text}")
+            print(f"[wait_until_complete] Error checking status: {response.status_code} — {response.text}")
             time.sleep(interval)
             continue
 
@@ -110,7 +120,7 @@ def wait_until_complete(container_id, access_token, interval=5, max_attempts=40)
 # Simple test script. Uploads to AWS, gets url and creates a container, uploads container, deletes file from aws
 if __name__ == '__main__':
     print("Uploading file to aws...")
-    url, obj = upload_file_to_aws_s3("C:/Users/buchk/parallel-uploads/test_files/test_file_1.mp4")
+    url, obj = upload_file_to_aws_s3(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "test_files", "test_file_1.mp4"))
     print("File successfully uploaded! Find it at: ")
     print(url)
     ig_id = os.getenv("INSTAGRAM_ACCOUNT_ID")
