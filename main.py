@@ -2,12 +2,14 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from utils.instagram.aws_s3_manager import upload_file_to_aws_s3
 from utils.instagram.upload_instagram import ig_create_container
 from utils.youtube.upload_youtube import upload_youtube
+import os
 #contact me at AzimUsmanov2027@u.northwestern.edu for more info or documentation
 
 
 def main():
     #SHARED FIELDS
-    filepath = "C:/Users/buchk/parallel-uploads/test_files/test_file_1.mp4"
+    # filepath = "C:/Users/buchk/parallel-uploads/test_files/test_file_1.mp4"
+    filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_files", "test_file_1.mp4")
     title = "AK going crazy"
     description = "Test Description"
 
