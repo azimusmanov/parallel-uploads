@@ -6,66 +6,169 @@
     <title>Parallel Uploads</title>
     <style>
         :root {
-            --bg: #f3efe6;
-            --panel: rgba(255, 252, 246, 0.92);
-            --ink: #1b1c1e;
-            --muted: #5e5b55;
-            --line: #cbbca3;
-            --accent: #c95a2b;
-            --accent-dark: #8b3512;
-            --ok: #1f6b4f;
-            --bad: #8d2f2f;
+            --bg: #060816;
+            --bg-2: #0d1430;
+            --panel: rgba(8, 13, 31, 0.78);
+            --panel-strong: rgba(9, 17, 39, 0.94);
+            --text: #e8f3ff;
+            --muted: #8ca2c4;
+            --line: rgba(83, 224, 255, 0.18);
+            --cyan: #61f4ff;
+            --cyan-2: #1ebeff;
+            --pink: #ff4fd8;
+            --lime: #9dff6d;
+            --danger: #ff7b9c;
+            --shadow: 0 28px 90px rgba(0, 0, 0, 0.46);
+            --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+            --sans: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
         }
 
         * {
             box-sizing: border-box;
         }
 
+        html {
+            color-scheme: dark;
+        }
+
         body {
             margin: 0;
             min-height: 100vh;
-            font-family: Georgia, "Times New Roman", serif;
-            color: var(--ink);
+            color: var(--text);
+            font-family: var(--sans);
             background:
-                radial-gradient(circle at top left, rgba(201, 90, 43, 0.18), transparent 35%),
-                radial-gradient(circle at bottom right, rgba(31, 107, 79, 0.18), transparent 28%),
-                linear-gradient(135deg, #f7f2e8 0%, #e7dcc8 100%);
-            display: grid;
-            place-items: center;
-            padding: 24px;
+                radial-gradient(circle at 15% 20%, rgba(255, 79, 216, 0.16), transparent 24%),
+                radial-gradient(circle at 85% 10%, rgba(97, 244, 255, 0.18), transparent 22%),
+                radial-gradient(circle at 50% 100%, rgba(30, 190, 255, 0.16), transparent 32%),
+                linear-gradient(180deg, #050713 0%, #091124 45%, #050814 100%);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(97, 244, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(97, 244, 255, 0.05) 1px, transparent 1px);
+            background-size: 42px 42px;
+            mask-image: radial-gradient(circle at center, black 45%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .page {
+            width: min(1120px, calc(100% - 32px));
+            margin: 24px auto;
+            position: relative;
         }
 
         .shell {
-            width: min(900px, 100%);
-            background: var(--panel);
-            border: 1px solid rgba(139, 53, 18, 0.14);
-            border-radius: 24px;
-            box-shadow: 0 24px 60px rgba(60, 40, 20, 0.12);
+            position: relative;
+            background: linear-gradient(180deg, rgba(10, 18, 40, 0.86), rgba(5, 10, 24, 0.92));
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            box-shadow: var(--shadow);
             overflow: hidden;
+            backdrop-filter: blur(18px);
+        }
+
+        .shell::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(135deg, rgba(97, 244, 255, 0.1), transparent 28%),
+                linear-gradient(315deg, rgba(255, 79, 216, 0.08), transparent 30%);
+            pointer-events: none;
         }
 
         .hero {
-            padding: 32px 32px 12px;
+            position: relative;
+            padding: 34px 34px 18px;
+            border-bottom: 1px solid rgba(97, 244, 255, 0.12);
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.22em;
+            color: var(--cyan);
+            margin-bottom: 18px;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 46px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--cyan));
+            box-shadow: 0 0 18px rgba(97, 244, 255, 0.75);
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+            gap: 24px;
+            align-items: start;
         }
 
         h1 {
-            margin: 0 0 10px;
-            font-size: clamp(2rem, 4vw, 3.8rem);
-            line-height: 0.95;
-            letter-spacing: -0.04em;
+            margin: 0 0 12px;
+            font-size: clamp(2.5rem, 5vw, 5.2rem);
+            line-height: 0.9;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+            text-shadow: 0 0 28px rgba(97, 244, 255, 0.18);
         }
 
-        .hero p {
-            max-width: 650px;
-            color: var(--muted);
+        .hero-copy p {
             margin: 0;
-            font-size: 1.05rem;
+            max-width: 720px;
+            color: var(--muted);
+            font-size: 1.02rem;
+            line-height: 1.6;
+        }
+
+        .signal {
+            padding: 18px 20px;
+            border: 1px solid rgba(255, 79, 216, 0.22);
+            border-radius: 20px;
+            background: linear-gradient(180deg, rgba(18, 26, 58, 0.9), rgba(9, 14, 33, 0.82));
+        }
+
+        .signal h2 {
+            margin: 0 0 12px;
+            font-family: var(--mono);
+            font-size: 0.9rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--pink);
+        }
+
+        .signal-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .signal-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            font-family: var(--mono);
+            font-size: 0.9rem;
+        }
+
+        .signal-row span:last-child {
+            color: var(--cyan);
         }
 
         form {
-            padding: 20px 32px 32px;
+            padding: 26px 34px 34px;
             display: grid;
-            gap: 18px;
+            gap: 22px;
         }
 
         .grid {
@@ -76,9 +179,18 @@
 
         label {
             display: grid;
-            gap: 8px;
+            gap: 10px;
             font-weight: 600;
-            font-size: 0.95rem;
+            color: #d6e4ff;
+            font-size: 0.92rem;
+        }
+
+        .label-hint {
+            font-weight: 400;
+            color: var(--muted);
+            font-size: 0.82rem;
+            font-family: var(--mono);
+            letter-spacing: 0.03em;
         }
 
         input[type="text"],
@@ -86,93 +198,201 @@
         select,
         input[type="file"] {
             width: 100%;
-            border: 1px solid var(--line);
-            border-radius: 14px;
-            padding: 12px 14px;
+            border: 1px solid rgba(97, 244, 255, 0.18);
+            border-radius: 18px;
+            padding: 14px 16px;
             font: inherit;
-            color: inherit;
-            background: rgba(255, 255, 255, 0.78);
+            color: var(--text);
+            background: linear-gradient(180deg, rgba(12, 19, 42, 0.94), rgba(8, 13, 31, 0.94));
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus,
+        input[type="file"]:focus {
+            outline: none;
+            border-color: rgba(97, 244, 255, 0.58);
+            box-shadow: 0 0 0 3px rgba(97, 244, 255, 0.08), 0 0 24px rgba(97, 244, 255, 0.14);
         }
 
         textarea {
-            min-height: 140px;
+            min-height: 156px;
             resize: vertical;
         }
 
         .platforms {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 14px;
         }
 
         .choice {
+            position: relative;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            padding: 12px 16px;
-            border: 1px solid var(--line);
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.72);
-            font-weight: 600;
+            gap: 12px;
+            padding: 14px 18px;
+            min-width: 170px;
+            border: 1px solid rgba(97, 244, 255, 0.18);
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(9, 14, 33, 0.96), rgba(10, 18, 40, 0.8));
+            box-shadow: inset 0 0 24px rgba(97, 244, 255, 0.02);
+            transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+        }
+
+        .choice:hover {
+            transform: translateY(-1px);
+            border-color: rgba(97, 244, 255, 0.4);
+            box-shadow: 0 0 22px rgba(97, 244, 255, 0.08);
+        }
+
+        .choice input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--cyan-2);
+        }
+
+        .choice-text {
+            display: grid;
+            gap: 4px;
+        }
+
+        .choice-text strong {
+            font-size: 0.96rem;
+            letter-spacing: 0.02em;
+        }
+
+        .choice-text span {
+            font-size: 0.8rem;
+            color: var(--muted);
+            font-family: var(--mono);
+        }
+
+        .upload-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            padding-top: 6px;
+        }
+
+        .footer-copy {
+            color: var(--muted);
+            font-size: 0.9rem;
+            font-family: var(--mono);
         }
 
         button {
-            justify-self: start;
+            position: relative;
             border: 0;
             border-radius: 999px;
-            padding: 14px 22px;
+            padding: 15px 24px;
+            min-width: 220px;
             font: inherit;
-            font-weight: 700;
-            color: #fff7ed;
-            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #05101c;
+            background: linear-gradient(135deg, var(--cyan), var(--lime));
+            box-shadow: 0 0 30px rgba(97, 244, 255, 0.24);
             cursor: pointer;
+            transition: transform 140ms ease, box-shadow 140ms ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 38px rgba(97, 244, 255, 0.34);
         }
 
         .message,
         .results {
-            margin: 0 32px 32px;
-            padding: 18px 20px;
-            border-radius: 18px;
-            border: 1px solid var(--line);
-            background: rgba(255, 255, 255, 0.68);
+            margin: 0 34px 34px;
+            padding: 20px 22px;
+            border-radius: 22px;
+            border: 1px solid rgba(255, 79, 216, 0.18);
+            background: linear-gradient(180deg, rgba(20, 12, 34, 0.84), rgba(10, 11, 27, 0.78));
         }
 
         .message {
-            color: var(--bad);
+            color: var(--danger);
+            box-shadow: inset 0 0 24px rgba(255, 123, 156, 0.05);
         }
 
         .results h2 {
-            margin-top: 0;
-            font-size: 1.1rem;
+            margin: 0 0 16px;
+            font-family: var(--mono);
+            font-size: 0.95rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--cyan);
         }
 
         .result-list {
             display: grid;
-            gap: 12px;
+            gap: 14px;
         }
 
         .result {
-            padding: 14px 16px;
-            border-radius: 14px;
-            background: #fffdf8;
+            padding: 16px 18px;
+            border-radius: 18px;
+            border: 1px solid rgba(97, 244, 255, 0.1);
+            background: rgba(7, 14, 33, 0.72);
+        }
+
+        .result-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 10px;
         }
 
         .result strong {
-            display: inline-block;
-            min-width: 96px;
+            font-family: var(--mono);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #dff7ff;
+        }
+
+        .ok,
+        .bad {
+            font-family: var(--mono);
+            font-size: 0.84rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
         }
 
         .ok {
-            color: var(--ok);
+            color: var(--lime);
         }
 
         .bad {
-            color: var(--bad);
+            color: var(--danger);
         }
 
-        @media (max-width: 700px) {
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: var(--mono);
+            font-size: 0.83rem;
+            line-height: 1.55;
+            color: #bbdcff;
+        }
+
+        @media (max-width: 860px) {
+            .hero-grid,
             .grid {
                 grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .page {
+                width: min(100%, calc(100% - 18px));
+                margin: 10px auto;
             }
 
             .hero,
@@ -186,104 +406,141 @@
                 margin-left: 20px;
                 margin-right: 20px;
             }
+
+            h1 {
+                font-size: 2.3rem;
+            }
+
+            button {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <main class="shell">
-        <section class="hero">
-            <h1>Publish Once.<br>Push Everywhere.</h1>
-            <p>Upload a single video, pick the platforms, and send the existing Python uploader through a small browser UI.</p>
-        </section>
-
-        <form action="/upload" method="post" enctype="multipart/form-data">
-            <div class="grid">
-                <label>
-                    Title
-                    <input type="text" name="title" value="{{ form_data.get('title', '') }}" required>
-                </label>
-                <label>
-                    YouTube Privacy
-                    <select name="privacy_status">
-                        {% set current_privacy = form_data.get('privacy_status', 'unlisted') %}
-                        <option value="public" {% if current_privacy == 'public' %}selected{% endif %}>Public</option>
-                        <option value="unlisted" {% if current_privacy == 'unlisted' %}selected{% endif %}>Unlisted</option>
-                        <option value="private" {% if current_privacy == 'private' %}selected{% endif %}>Private</option>
-                    </select>
-                </label>
-            </div>
-
-            <label>
-                Caption / Description
-                <textarea name="description" required>{{ form_data.get('description', '') }}</textarea>
-            </label>
-
-            <label>
-                Keywords (YouTube optional)
-                <input type="text" name="keywords" value="{{ form_data.get('keywords', '') }}" placeholder="music, shorts, demo">
-            </label>
-
-            <label>
-                Platforms
-                <span class="platforms">
-                    {% set selected_platforms = form_data.get('platforms', []) %}
-                    <span class="choice">
-                        <input type="checkbox" name="platforms" value="youtube" {% if 'youtube' in selected_platforms %}checked{% endif %}>
-                        YouTube
-                    </span>
-                    <span class="choice">
-                        <input type="checkbox" name="platforms" value="instagram" {% if 'instagram' in selected_platforms %}checked{% endif %}>
-                        Instagram
-                    </span>
-                </span>
-            </label>
-
-            <label>
-                Video File
-                <input type="file" name="video" accept=".mp4,.mov,.m4v,.avi,.webm" required>
-            </label>
-
-            <button type="submit">Start Upload</button>
-        </form>
-
-        {% if error %}
-        <section class="message">
-            {{ error }}
-        </section>
-        {% endif %}
-
-        {% if results %}
-        <section class="results">
-            <h2>Upload Results</h2>
-            <div class="result-list">
-                {% for platform, result in results.items() %}
-                <article class="result">
-                    <div>
-                        <strong>{{ platform.title() }}</strong>
-                        {% if result.success %}
-                        <span class="ok">Success</span>
-                        {% else %}
-                        <span class="bad">Failed</span>
-                        {% endif %}
+    <div class="page">
+        <main class="shell">
+            <section class="hero">
+                <div class="eyebrow">Parallel Upload Relay</div>
+                <div class="hero-grid">
+                    <div class="hero-copy">
+                        <h1>Launch One Clip.<br>Hit Every Feed.</h1>
+                        <p>Route one upload through the AWS pipeline, create jobs, and watch the platform relay from a neon control surface instead of a plain form.</p>
                     </div>
-                    <div>
-                        {% if result.success %}
-                            {% if platform in ['invoke_debug', 'env_debug'] %}
-                            <pre>{{ result.value }}</pre>
-                            {% elif platform == 'asset_url_debug' %}
-                            <pre>{{ result.value }}</pre>
+                    <aside class="signal">
+                        <h2>Signal Board</h2>
+                        <div class="signal-list">
+                            <div class="signal-row"><span>Ingress</span><span>S3 Presign</span></div>
+                            <div class="signal-row"><span>Dispatch</span><span>Upload Jobs</span></div>
+                            <div class="signal-row"><span>Targets</span><span>YouTube / Instagram</span></div>
+                            <div class="signal-row"><span>Mode</span><span>AWS Relay</span></div>
+                        </div>
+                    </aside>
+                </div>
+            </section>
+
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <div class="grid">
+                    <label>
+                        Title
+                        <span class="label-hint">Primary title for the queued post payload.</span>
+                        <input type="text" name="title" value="{{ form_data.get('title', '') }}" required>
+                    </label>
+                    <label>
+                        YouTube Privacy
+                        <span class="label-hint">Only applies to the YouTube job metadata.</span>
+                        <select name="privacy_status">
+                            {% set current_privacy = form_data.get('privacy_status', 'unlisted') %}
+                            <option value="public" {% if current_privacy == 'public' %}selected{% endif %}>Public</option>
+                            <option value="unlisted" {% if current_privacy == 'unlisted' %}selected{% endif %}>Unlisted</option>
+                            <option value="private" {% if current_privacy == 'private' %}selected{% endif %}>Private</option>
+                        </select>
+                    </label>
+                </div>
+
+                <label>
+                    Caption / Description
+                    <span class="label-hint">Used for Instagram caption and stored on the asset record.</span>
+                    <textarea name="description" required>{{ form_data.get('description', '') }}</textarea>
+                </label>
+
+                <label>
+                    Keywords
+                    <span class="label-hint">Optional YouTube metadata, comma separated.</span>
+                    <input type="text" name="keywords" value="{{ form_data.get('keywords', '') }}" placeholder="music, shorts, demo">
+                </label>
+
+                <label>
+                    Destination Platforms
+                    <span class="label-hint">Each selection creates its own upload job.</span>
+                    <span class="platforms">
+                        {% set selected_platforms = form_data.get('platforms', []) %}
+                        <span class="choice">
+                            <input type="checkbox" name="platforms" value="youtube" {% if 'youtube' in selected_platforms %}checked{% endif %}>
+                            <span class="choice-text">
+                                <strong>YouTube</strong>
+                                <span>Shorts pipeline</span>
+                            </span>
+                        </span>
+                        <span class="choice">
+                            <input type="checkbox" name="platforms" value="instagram" {% if 'instagram' in selected_platforms %}checked{% endif %}>
+                            <span class="choice-text">
+                                <strong>Instagram</strong>
+                                <span>Reels worker</span>
+                            </span>
+                        </span>
+                    </span>
+                </label>
+
+                <label>
+                    Video File
+                    <span class="label-hint">Accepted: MP4, MOV, M4V, AVI, WEBM.</span>
+                    <input type="file" name="video" accept=".mp4,.mov,.m4v,.avi,.webm" required>
+                </label>
+
+                <div class="upload-footer">
+                    <div class="footer-copy">This frontend submits into your live AWS presign + asset + upload_jobs flow.</div>
+                    <button type="submit">Transmit Upload</button>
+                </div>
+            </form>
+
+            {% if error %}
+            <section class="message">
+                {{ error }}
+            </section>
+            {% endif %}
+
+            {% if results %}
+            <section class="results">
+                <h2>Relay Output</h2>
+                <div class="result-list">
+                    {% for platform, result in results.items() %}
+                    <article class="result">
+                        <div class="result-head">
+                            <strong>{{ platform.title() }}</strong>
+                            {% if result.success %}
+                            <span class="ok">Success</span>
                             {% else %}
-                            {{ result.value }}
+                            <span class="bad">Failed</span>
                             {% endif %}
-                        {% else %}
-                            {{ result.error }}
-                        {% endif %}
-                    </div>
-                </article>
-                {% endfor %}
-            </div>
-        </section>
-        {% endif %}
-    </main>
+                        </div>
+                        <div>
+                            {% if result.success %}
+                                {% if platform in ['invoke_debug', 'env_debug', 'asset_url_debug'] %}
+                                <pre>{{ result.value }}</pre>
+                                {% else %}
+                                {{ result.value }}
+                                {% endif %}
+                            {% else %}
+                                {{ result.error }}
+                            {% endif %}
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+        </main>
+    </div>
 </body>
 </html>
