@@ -1,0 +1,35 @@
+{
+  "jobs": [
+    {
+      "id": 101,
+      "platform": "youtube",
+      "asset": {
+        "s3_bucket": "parallel-uploads-videos",
+        "s3_key": "uploads/my-video.mp4",
+        "original_filename": "my-video.mp4",
+        "title": "Example title",
+        "caption": "Example caption from the asset row"
+      },
+      "platform_specific_metadata": {
+        "title": "Example title",
+        "description": "Example caption from the job metadata",
+        "keywords": "demo,shorts",
+        "privacy_status": "unlisted",
+        "category": "22"
+      }
+    },
+    {
+      "id": 102,
+      "platform": "instagram",
+      "asset": {
+        "s3_bucket": "parallel-uploads-videos",
+        "s3_key": "uploads/my-video.mp4",
+        "original_filename": "my-video.mp4",
+        "caption": "Example caption from the asset row"
+      },
+      "platform_specific_metadata": {
+        "description": "Instagram caption"
+      }
+    }
+  ]
+}

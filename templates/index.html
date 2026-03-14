@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Parallel Uploads</title>
+    <style>
+        :root {
+            --bg: #f3efe6;
+            --panel: rgba(255, 252, 246, 0.92);
+            --ink: #1b1c1e;
+            --muted: #5e5b55;
+            --line: #cbbca3;
+            --accent: #c95a2b;
+            --accent-dark: #8b3512;
+            --ok: #1f6b4f;
+            --bad: #8d2f2f;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Georgia, "Times New Roman", serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(201, 90, 43, 0.18), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(31, 107, 79, 0.18), transparent 28%),
+                linear-gradient(135deg, #f7f2e8 0%, #e7dcc8 100%);
+            display: grid;
+            place-items: center;
+            padding: 24px;
+        }
+
+        .shell {
+            width: min(900px, 100%);
+            background: var(--panel);
+            border: 1px solid rgba(139, 53, 18, 0.14);
+            border-radius: 24px;
+            box-shadow: 0 24px 60px rgba(60, 40, 20, 0.12);
+            overflow: hidden;
+        }
+
+        .hero {
+            padding: 32px 32px 12px;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: clamp(2rem, 4vw, 3.8rem);
+            line-height: 0.95;
+            letter-spacing: -0.04em;
+        }
+
+        .hero p {
+            max-width: 650px;
+            color: var(--muted);
+            margin: 0;
+            font-size: 1.05rem;
+        }
+
+        form {
+            padding: 20px 32px 32px;
+            display: grid;
+            gap: 18px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        label {
+            display: grid;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        textarea,
+        select,
+        input[type="file"] {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 12px 14px;
+            font: inherit;
+            color: inherit;
+            background: rgba(255, 255, 255, 0.78);
+        }
+
+        textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .platforms {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .choice {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.72);
+            font-weight: 600;
+        }
+
+        button {
+            justify-self: start;
+            border: 0;
+            border-radius: 999px;
+            padding: 14px 22px;
+            font: inherit;
+            font-weight: 700;
+            color: #fff7ed;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            cursor: pointer;
+        }
+
+        .message,
+        .results {
+            margin: 0 32px 32px;
+            padding: 18px 20px;
+            border-radius: 18px;
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.68);
+        }
+
+        .message {
+            color: var(--bad);
+        }
+
+        .results h2 {
+            margin-top: 0;
+            font-size: 1.1rem;
+        }
+
+        .result-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .result {
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: #fffdf8;
+        }
+
+        .result strong {
+            display: inline-block;
+            min-width: 96px;
+        }
+
+        .ok {
+            color: var(--ok);
+        }
+
+        .bad {
+            color: var(--bad);
+        }
+
+        @media (max-width: 700px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero,
+            form {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            .message,
+            .results {
+                margin-left: 20px;
+                margin-right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <section class="hero">
+            <h1>Publish Once.<br>Push Everywhere.</h1>
+            <p>Upload a single video, pick the platforms, and send the existing Python uploader through a small browser UI.</p>
+        </section>
+
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <div class="grid">
+                <label>
+                    Title
+                    <input type="text" name="title" value="{{ form_data.get('title', '') }}" required>
+                </label>
+                <label>
+                    YouTube Privacy
+                    <select name="privacy_status">
+                        {% set current_privacy = form_data.get('privacy_status', 'unlisted') %}
+                        <option value="public" {% if current_privacy == 'public' %}selected{% endif %}>Public</option>
+                        <option value="unlisted" {% if current_privacy == 'unlisted' %}selected{% endif %}>Unlisted</option>
+                        <option value="private" {% if current_privacy == 'private' %}selected{% endif %}>Private</option>
+                    </select>
+                </label>
+            </div>
+
+            <label>
+                Caption / Description
+                <textarea name="description" required>{{ form_data.get('description', '') }}</textarea>
+            </label>
+
+            <label>
+                Keywords (YouTube optional)
+                <input type="text" name="keywords" value="{{ form_data.get('keywords', '') }}" placeholder="music, shorts, demo">
+            </label>
+
+            <label>
+                Platforms
+                <span class="platforms">
+                    {% set selected_platforms = form_data.get('platforms', []) %}
+                    <span class="choice">
+                        <input type="checkbox" name="platforms" value="youtube" {% if 'youtube' in selected_platforms %}checked{% endif %}>
+                        YouTube
+                    </span>
+                    <span class="choice">
+                        <input type="checkbox" name="platforms" value="instagram" {% if 'instagram' in selected_platforms %}checked{% endif %}>
+                        Instagram
+                    </span>
+                </span>
+            </label>
+
+            <label>
+                Video File
+                <input type="file" name="video" accept=".mp4,.mov,.m4v,.avi,.webm" required>
+            </label>
+
+            <button type="submit">Start Upload</button>
+        </form>
+
+        {% if error %}
+        <section class="message">
+            {{ error }}
+        </section>
+        {% endif %}
+
+        {% if results %}
+        <section class="results">
+            <h2>Upload Results</h2>
+            <div class="result-list">
+                {% for platform, result in results.items() %}
+                <article class="result">
+                    <div>
+                        <strong>{{ platform.title() }}</strong>
+                        {% if result.success %}
+                        <span class="ok">Success</span>
+                        {% else %}
+                        <span class="bad">Failed</span>
+                        {% endif %}
+                    </div>
+                    <div>
+                        {% if result.success %}
+                            {% if platform in ['invoke_debug', 'env_debug'] %}
+                            <pre>{{ result.value }}</pre>
+                            {% elif platform == 'asset_url_debug' %}
+                            <pre>{{ result.value }}</pre>
+                            {% else %}
+                            {{ result.value }}
+                            {% endif %}
+                        {% else %}
+                            {{ result.error }}
+                        {% endif %}
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+    </main>
+</body>
+</html>
